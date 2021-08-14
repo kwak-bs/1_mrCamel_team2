@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import mockData from "Utils/mockData.json";
 import { style } from "./DetailedProductStyle";
+import { HandleProduct } from "../ProductList/utils/HandleProduct";
 
 class DetailedProduct extends Component {
   constructor(props) {
@@ -33,7 +34,7 @@ class DetailedProduct extends Component {
     });
   }
 
-  randomLoad =  (currentItem, clicked) => {
+  randomLoad = (currentItem, clicked) => {
     const { ItemList, history, dislikeItems } = this.state;
     let RandomNumber = -1;
 
@@ -75,34 +76,17 @@ class DetailedProduct extends Component {
       };
       // clicked를 받는 이유는 관심없는 버튼을 클릭했을 때는 최근 조회목록에 들어가면 안되기 때문.
       if (clicked) {
-        this.HandleProduct(Product);
+        this.HandleLikeProduct(Product);
       }
     }
     history.push(`/product/${this.state.RandomId}`);
   };
 
-  // 최근 조회 로컬 스토리지 저장.
-  AddRecentProduct = (recentItems, ClickProd) => {
-    recentItems.push(ClickProd);
-    const stringProds = JSON.stringify(recentItems);
-    localStorage.setItem("recentItems", stringProds);
-  };
-
-  HandleProduct = (ClickProd) => {
-    let recentItems = this.state.recentItems;
-
-    if (recentItems === null) {
-      recentItems = [];
-      this.AddRecentProduct(recentItems, ClickProd);
-    } else {
-      const filterItems = recentItems.filter(
-        (el) => JSON.stringify(el) !== JSON.stringify(ClickProd)
-      );
-      this.AddRecentProduct(filterItems, ClickProd);
-      this.setState({
-        recentItems: JSON.parse(localStorage.getItem("recentItems")),
-      });
-    }
+  HandleLikeProduct = (ClickProd) => {
+    HandleProduct(ClickProd);
+    this.setState({
+      recentItems: JSON.parse(localStorage.getItem("recentItems")),
+    });
   };
 
   // 관심 없음 로컬 스토리지 저장

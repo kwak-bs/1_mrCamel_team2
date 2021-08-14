@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { style } from "./ProductStyle";
 import { Link } from "react-router-dom";
+import { HandleProduct } from "../utils/HandleProduct";
 
 class Product extends Component {
   constructor() {
@@ -9,26 +10,6 @@ class Product extends Component {
       recentItems: JSON.parse(localStorage.getItem("recentItems")),
     };
   }
-
-  AddProduct = (recentItems, ClickProd) => {
-    recentItems.push(ClickProd);
-    const stringProds = JSON.stringify(recentItems);
-    localStorage.setItem("recentItems", stringProds);
-  };
-
-  HandleProduct = (ClickProd) => {
-    let recentItems = this.state.recentItems;
-
-    if (recentItems === null) {
-      recentItems = [];
-      this.AddProduct(recentItems, ClickProd);
-    } else {
-      const filterItems = recentItems.filter(
-        (el) => JSON.stringify(el) !== JSON.stringify(ClickProd)
-      );
-      this.AddProduct(filterItems, ClickProd);
-    }
-  };
 
   render() {
     const { id, title, brand, price } = this.props;
@@ -48,7 +29,7 @@ class Product extends Component {
               price,
             },
           }}
-          onClick={() => this.HandleProduct(ClickProd)}
+          onClick={() => HandleProduct(ClickProd)}
         >
           <ProductBox>
             <img
