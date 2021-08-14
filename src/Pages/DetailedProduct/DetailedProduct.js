@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Product from "Components/Product";
 import mockData from "Utils/mockData.json";
 import { style } from "./DetailedProductStyle";
 
@@ -34,7 +33,7 @@ class DetailedProduct extends Component {
     });
   }
 
-  randomLoad = async (currentItem, flag) => {
+  randomLoad =  (currentItem, clicked) => {
     const { ItemList, history, dislikeItems } = this.state;
     let RandomNumber = -1;
 
@@ -61,20 +60,21 @@ class DetailedProduct extends Component {
     RandomNumber = getRandom(0, likeList.length);
 
     const { title, brand, price } = likeList[RandomNumber];
-    await this.setState({
+    this.setState({
       RandomId: RandomNumber,
       RandomTitle: title,
       RandomBrand: brand,
       RandomPrice: price,
     });
-
+    // 랜덤번호가 생성 됐으면 랜덤으로 뽑힌 아이템을 Product에 넣고 최근 조회 리스트에 추가
     if (this.state.RandomTitle) {
       const Product = {
         title: this.state.RandomTitle,
         brand: this.state.RandomBrand,
         price: this.state.RandomPrice,
       };
-      if (flag) {
+      // clicked를 받는 이유는 관심없는 버튼을 클릭했을 때는 최근 조회목록에 들어가면 안되기 때문.
+      if (clicked) {
         this.HandleProduct(Product);
       }
     }
