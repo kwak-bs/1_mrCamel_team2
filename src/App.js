@@ -1,5 +1,5 @@
-import RecentList from "./Pages/RecentList";
-import ProductList from "./Pages/ProductList";
+import RecentList from "Pages/RecentList";
+import ProductList from "Pages/ProductList";
 import DetailedProduct from "Pages/DetailedProduct";
 import { Route, HashRouter } from "react-router-dom";
 
