@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import styled from "styled-components";
-import Product from "Components/Product";
 import mockData from "Utils/mockData.json";
+import { style } from "./DetailedProductStyle";
+import { HandleProduct } from "../ProductList/utils/HandleProduct";
 
 class DetailedProduct extends Component {
   constructor(props) {
@@ -34,7 +34,7 @@ class DetailedProduct extends Component {
     });
   }
 
-  randomLoad = async (currentItem, flag) => {
+  randomLoad = (currentItem, clicked) => {
     const { ItemList, history, dislikeItems } = this.state;
     let RandomNumber = -1;
 
@@ -61,48 +61,32 @@ class DetailedProduct extends Component {
     RandomNumber = getRandom(0, likeList.length);
 
     const { title, brand, price } = likeList[RandomNumber];
-    await this.setState({
+    this.setState({
       RandomId: RandomNumber,
       RandomTitle: title,
       RandomBrand: brand,
       RandomPrice: price,
     });
-
+    // 랜덤번호가 생성 됐으면 랜덤으로 뽑힌 아이템을 Product에 넣고 최근 조회 리스트에 추가
     if (this.state.RandomTitle) {
       const Product = {
         title: this.state.RandomTitle,
         brand: this.state.RandomBrand,
         price: this.state.RandomPrice,
       };
-      if (flag) {
-        this.HandleProduct(Product);
+      // clicked를 받는 이유는 관심없는 버튼을 클릭했을 때는 최근 조회목록에 들어가면 안되기 때문.
+      if (clicked) {
+        this.HandleLikeProduct(Product);
       }
     }
     history.push(`/product/${this.state.RandomId}`);
   };
 
-  // 최근 조회 로컬 스토리지 저장.
-  AddRecentProduct = (recentItems, ClickProd) => {
-    recentItems.push(ClickProd);
-    const stringProds = JSON.stringify(recentItems);
-    localStorage.setItem("recentItems", stringProds);
-  };
-
-  HandleProduct = (ClickProd) => {
-    let recentItems = this.state.recentItems;
-
-    if (recentItems === null) {
-      recentItems = [];
-      this.AddRecentProduct(recentItems, ClickProd);
-    } else {
-      const filterItems = recentItems.filter(
-        (el) => JSON.stringify(el) !== JSON.stringify(ClickProd)
-      );
-      this.AddRecentProduct(filterItems, ClickProd);
-      this.setState({
-        recentItems: JSON.parse(localStorage.getItem("recentItems")),
-      });
-    }
+  HandleLikeProduct = (ClickProd) => {
+    HandleProduct(ClickProd);
+    this.setState({
+      recentItems: JSON.parse(localStorage.getItem("recentItems")),
+    });
   };
 
   // 관심 없음 로컬 스토리지 저장
@@ -221,139 +205,18 @@ class DetailedProduct extends Component {
 
 export default DetailedProduct;
 
-const ProductContainer = styled.div`
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 1200px;
-  height: 500px;
-`;
-
-const ProductWrap = styled.div`
-  display: flex;
-  position: absolute;
-  left: 50%;
-  transform: translate(-50%);
-  width: 90%;
-  height: 85%;
-`;
-
-const LeftSide = styled.div`
-  width: 100%;
-  img {
-    position: relative;
-    width: 90%;
-    height: 90%;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
-`;
-
-const RightSide = styled.div`
-  width: 100%;
-`;
-
-const ProductContentWrap = styled.div`
-  position: relative;
-  width: 90%;
-  height: 90%;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-`;
-
-const ContentWrap = styled.div`
-  width: 100%;
-  height: 50%;
-  margin: 20px;
-`;
-
-const ProductTitle = styled.div`
-  height: 10%;
-  margin: 20px;
-  h1 {
-    font-size: larger;
-    font-weight: 600;
-  }
-`;
-
-const ProductBrand = styled.div`
-  height: 10%;
-  margin: 10px 10px 10px 20px;
-  h2 {
-    font-size: small;
-    color: gray;
-  }
-`;
-
-const ProductPrice = styled.div`
-  height: 10%;
-  margin: 20px;
-  h1 {
-    font-size: larger;
-    font-weight: 600;
-  }
-`;
-
-const BtnWrap = styled.div`
-  display: flex;
-  width: 100%;
-  height: 30%;
-`;
-
-const RandomBtn = styled.div`
-  width: 100%;
-
-  button {
-    position: relative;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 80%;
-    height: 50%;
-    background-color: #1cbdcf;
-    color: white;
-    font-weight: 500;
-    font-size: medium;
-  }
-`;
-
-const NoInterestBtn = styled.div`
-  width: 100%;
-
-  button {
-    position: relative;
-    left: 50%;
-    top: 50%;
-    width: 80%;
-    height: 50%;
-    transform: translate(-50%, -50%);
-    color: #1cbdcf;
-    font-weight: 500;
-    font-size: medium;
-    border: 1px solid;
-  }
-`;
-
-const RecentListBtnWrap = styled.div`
-  position: absolute;
-  bottom: 0px;
-  width: 100%;
-  height: 10%;
-  margin: 10px 10px 20px 0px;
-
-  button {
-    position: relative;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    width: 86%;
-    height: 100%;
-    background-color: #1cbdcf;
-    color: white;
-    font-weight: 500;
-    font-size: medium;
-  }
-`;
+const {
+  ProductContainer,
+  ProductWrap,
+  LeftSide,
+  RightSide,
+  ProductContentWrap,
+  ContentWrap,
+  ProductTitle,
+  ProductBrand,
+  ProductPrice,
+  BtnWrap,
+  RandomBtn,
+  NoInterestBtn,
+  RecentListBtnWrap,
+} = style;

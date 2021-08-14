@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import styled from "styled-components";
+import { style } from "./ProductStyle";
 import { Link } from "react-router-dom";
+import { HandleProduct } from "../utils/HandleProduct";
 
 class Product extends Component {
   constructor() {
@@ -9,26 +10,6 @@ class Product extends Component {
       recentItems: JSON.parse(localStorage.getItem("recentItems")),
     };
   }
-
-  AddProduct = (recentItems, ClickProd) => {
-    recentItems.push(ClickProd);
-    const stringProds = JSON.stringify(recentItems);
-    localStorage.setItem("recentItems", stringProds);
-  };
-
-  HandleProduct = (ClickProd) => {
-    let recentItems = this.state.recentItems;
-
-    if (recentItems === null) {
-      recentItems = [];
-      this.AddProduct(recentItems, ClickProd);
-    } else {
-      const filterItems = recentItems.filter(
-        (el) => JSON.stringify(el) !== JSON.stringify(ClickProd)
-      );
-      this.AddProduct(filterItems, ClickProd);
-    }
-  };
 
   render() {
     const { id, title, brand, price } = this.props;
@@ -48,7 +29,7 @@ class Product extends Component {
               price,
             },
           }}
-          onClick={() => this.HandleProduct(ClickProd)}
+          onClick={() => HandleProduct(ClickProd)}
         >
           <ProductBox>
             <img
@@ -74,34 +55,6 @@ class Product extends Component {
   }
 }
 
-const ProductBox = styled.li`
-  display: flex;
-  flex-direction: column;
-  float: left;
-  width: 340px;
-  margin: 30px;
-  font-size: 16px;
-  border: solid 1px #8d8d8d;
-  cursor: pointer;
-  img {
-    width: 340px;
-    height: 300px;
-  }
-`;
-
-const ProductContentWrap = styled.div``;
-
-const ProductContentItem = styled.p`
-  margin: 10px 5px;
-  font-weight: 400;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-
-  .brandName {
-    margin: 0;
-    opacity: 0.5;
-  }
-`;
-
 export default Product;
+
+const { ProductBox, ProductContentWrap, ProductContentItem } = style;
