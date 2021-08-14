@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import styled from "styled-components";
+import { style } from "./ProductStyle";
 import { Link } from "react-router-dom";
 
 class Product extends Component {
@@ -74,34 +74,6 @@ class Product extends Component {
   }
 }
 
-const ProductBox = styled.li`
-  display: flex;
-  flex-direction: column;
-  float: left;
-  width: 340px;
-  margin: 30px;
-  font-size: 16px;
-  border: solid 1px #8d8d8d;
-  cursor: pointer;
-  img {
-    width: 340px;
-    height: 300px;
-  }
-`;
-
-const ProductContentWrap = styled.div``;
-
-const ProductContentItem = styled.p`
-  margin: 10px 5px;
-  font-weight: 400;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-
-  .brandName {
-    margin: 0;
-    opacity: 0.5;
-  }
-`;
-
 export default Product;
+
+const { ProductBox, ProductContentWrap, ProductContentItem } = style;
